@@ -4,7 +4,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 main_kb = ReplyKeyboardMarkup(
     keyboard=[
         [KeyboardButton(text="🌤 Погода"), KeyboardButton(text="💡 Совет")],
-        [KeyboardButton(text="💵 Конвертер валют"), KeyboardButton(text="📋 Работа с Trello")]
+        [KeyboardButton(text="💵 Конвертер валют"), KeyboardButton(text="📋 Работа с Trello")],
+        [KeyboardButton(text="💰 Курсы криптовалют")],
     ],
     resize_keyboard=True,
     input_field_placeholder="Выберите опцию..."

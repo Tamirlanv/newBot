@@ -1,5 +1,5 @@
 import logging
-from .trello_client import TrelloClient, TrelloError
+from .trello_client import TrelloClient
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +21,8 @@ class TrelloAPI:
     async def safe(self, coro):
         try:
             return await coro
-        except TrelloError as e:
-            return {"error": True, "message": str(e)}
         except Exception as e:
-            return {"error": True, "message": "Unexpected error", "details": str(e)}
+            return {"error": True, "message": str(e)}
         
 
     async def get_lists(self, board_id):
