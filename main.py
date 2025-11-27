@@ -6,6 +6,7 @@ from database import init_db
 from handlers import global_router  
 import logging
 from services.instances import *
+from services.alerts.alert_manager import set_alert_manager
 
 
 logging.basicConfig(
@@ -25,8 +26,10 @@ logging.getLogger("aiogram").setLevel(logging.INFO)
 logging.getLogger("aiohttp").setLevel(logging.INFO)
 
 async def main():
-    await cg_client._ensure_session()
-    await trello_client._ensure_session()
+    await cg_client.init()
+    await trello_client.init()
+    set_alert_manager(alert_manager)
+    await alert_manager.start(bot)
     init_db()
     try:
         await dp.start_polling(bot)

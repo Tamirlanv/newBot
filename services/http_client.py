@@ -15,7 +15,7 @@ class HTTPClient:
         self.session: Optional[aiohttp.ClientSession] = None
         self.cache = CacheTTL()
 
-    async def _ensure_session(self):
+    async def init(self):
         if self.session is None or self.session.closed:
             self.session = aiohttp.ClientSession()
 
@@ -24,7 +24,7 @@ class HTTPClient:
             await self.session.close()
 
     async def request(self, method: str, path: str, params=None):
-        await self._ensure_session()
+        await self.init()
 
         url = self.base_url + path.lstrip("/")
 
