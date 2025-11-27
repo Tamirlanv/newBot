@@ -3,7 +3,7 @@ from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKe
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-from services.trello.client_instance import trello_client
+from services.instances import trello_client
 from services.trello.trello_api import TrelloAPI
 from database import *
 from keyboards.keyboards import trello_kb
@@ -113,20 +113,6 @@ async def select_board(cb: CallbackQuery, state: FSMContext):
     await cb.message.answer("Выберите действие:", reply_markup=trello_kb)
 
     await state.clear()
-
-
-@router.callback_query(F.data.startswith("select_board_"), F.state == "choose_board")
-async def select_board(cb: CallbackQuery, state: FSMContext):
-    await cb.answer()
-    board_id = cb.data.split("select_board_", 1)[1]
-
-    save_board_id(cb.from_user.id, board_id)
-
-    await cb.message.answer("📌 Доска выбрана и сохранена!")
-    await cb.message.answer("Выберите действие:", reply_markup=trello_kb)
-
-    await state.clear()
-
 
 # ---------------- VIEW CARDS ----------------
 

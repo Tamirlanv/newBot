@@ -1,4 +1,4 @@
-from .coingecko_client import CoinGeckoClient
+from services.coingecko.coingecko_client import CoinGeckoClient
 
 class CoinGeckoAPI:
 
@@ -10,18 +10,14 @@ class CoinGeckoAPI:
         return {"x_cg_demo_api_key": self.api_key}
 
     async def price(self, coin, vs):
+
         params = {
             "ids": coin,
             "vs_currencies": vs,
             **self.auth()
         }
-        return await self.client.request(
-            f"{self.client.BASE}simple/price",
-            params
-        )
+
+        return await self.client.get("/simple/price", params)
 
     async def list_coins(self):
-        return await self.client.request(
-            f"{self.client.BASE}coins/list",
-            self.auth()
-        )
+        return await self.client.get("/coins/list", self.auth())

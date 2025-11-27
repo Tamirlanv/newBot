@@ -1,62 +1,31 @@
-import logging
-from .trello_client import TrelloClient
-
-logger = logging.getLogger(__name__)
-
-
+from services.trello.trello_client import TrelloClient
 class TrelloAPI:
-    
-    BASE = "https://api.trello.com/1"
 
     def __init__(self, key: str, token: str, client: TrelloClient):
         self.key = key
         self.token = token
         self.client = client
-        
 
-    def _auth(self):
+    def auth(self):
         return {"key": self.key, "token": self.token}
-    
-
-    async def safe(self, coro):
-        try:
-            return await coro
-        except Exception as e:
-            return {"error": True, "message": str(e)}
-        
 
     async def get_lists(self, board_id):
-        return await self.safe(
-            self.client.get(f"{self.BASE}/boards/{board_id}/lists", self._auth())
-        )
-        
+        return await self.client.get(f"/boards/{board_id}/lists", self.auth())
 
     async def get_cards(self, board_id):
-        return await self.safe(
-            self.client.get(f"{self.BASE}/boards/{board_id}/cards", self._auth())
-        )
-        
+        return await self.client.get(f"/boards/{board_id}/cards", self.auth())
 
     async def create_card(self, name, list_id):
-        params = {"name": name, "idList": list_id, **self._auth()}
-        return await self.safe(self.client.post(f"{self.BASE}/cards", params))
-    
+        params = {"name": name, "idList": list_id, **self.auth()}
+        return await self.client.post("/cards", params)
 
     async def delete_card(self, card_id):
-        return await self.safe(
-            self.client.delete(f"{self.BASE}/cards/{card_id}", self._auth())
-        )
-        
+        return await self.client.delete(f"/cards/{card_id}", self.auth())
 
     async def update_card(self, card_id, name):
-        params = {"name": name, **self._auth()}
-        return await self.safe(
-            self.client.put(f"{self.BASE}/cards/{card_id}", params)
-        )
-        
+        params = {"name": name, **self.auth()}
+        return await self.client.put(f"/cards/{card_id}", params)
 
     async def move_card(self, card_id, list_id):
-        params = {"idList": list_id, **self._auth()}
-        return await self.safe(
-            self.client.put(f"{self.BASE}/cards/{card_id}", params)
-        )
+        params = {"idList": list_id, **self.auth()}
+        return await self.client.put(f"/cards/{card_id}", params)

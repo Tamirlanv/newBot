@@ -5,8 +5,7 @@ from aiogram import Bot, Dispatcher
 from database import init_db
 from handlers import global_router  
 import logging
-
-from services.trello.client_instance import trello_client
+from services.instances import *
 
 
 logging.basicConfig(
@@ -26,12 +25,15 @@ logging.getLogger("aiogram").setLevel(logging.INFO)
 logging.getLogger("aiohttp").setLevel(logging.INFO)
 
 async def main():
-    await trello_client.init()
+    await cg_client._ensure_session()
+    await trello_client._ensure_session()
     init_db()
     try:
         await dp.start_polling(bot)
     finally:
+        await cg_client.close()
         await trello_client.close()
+
 
 if __name__ == "__main__":
     try:
